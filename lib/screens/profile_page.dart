@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
+import '../models/courier.dart';
+import '../services/api_service.dart';
+import '../services/api_exception.dart';
 import '../services/auth_service.dart';
 import 'security_page.dart';
 import 'help_center_page.dart';
@@ -13,17 +16,45 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  Map<String, dynamic>? _user;
+  final _api = ApiService();
+  Courier? _courier;
+  bool _isLoading = true;
+  String? _error;
 
   @override
   void initState() {
     super.initState();
-    _loadUser();
+    _loadData();
   }
 
-  Future<void> _loadUser() async {
-    final user = await AuthService().getUser();
-    if (mounted) setState(() => _user = user);
+  Future<void> _loadData() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+    try {
+      final courier = await _api.getProfile();
+      if (mounted) {
+        setState(() {
+          _courier = courier;
+          _isLoading = false;
+        });
+      }
+    } on ApiException catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = e.message;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = 'Gagal memuat: $e';
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   Future<void> _logout() async {
@@ -41,100 +72,146 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: bgDark,
       appBar: AppBar(
-        title: const Text('PROFIL KURIR', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1)),
+        title: const Text(
+          'PROFIL KURIR',
+          style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1),
+        ),
         backgroundColor: bgDark,
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings, color: textPrimary),
-            onPressed: () {},
-          )
+            icon: const Icon(Icons.refresh, color: brandRed),
+            onPressed: _loadData,
+          ),
         ],
       ),
-      body: ListView(
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator(color: brandRed));
+    }
+
+    if (_error != null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, color: brandRed, size: 64),
+              const SizedBox(height: 16),
+              Text(_error!, textAlign: TextAlign.center, style: const TextStyle(color: textPrimary)),
+              const SizedBox(height: 16),
+              ElevatedButton(onPressed: _loadData, child: const Text('Coba Lagi')),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      color: brandRed,
+      backgroundColor: surfaceDark,
+      onRefresh: _loadData,
+      child: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          // --- HEADER PROFIL ---
+          // --- HEADER PROFIL (FOTO) ---
           Center(
             child: Column(
               children: [
                 Stack(
                   alignment: Alignment.bottomRight,
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 50,
                       backgroundColor: surfaceLight,
-                      child: Icon(Icons.person, size: 60, color: textMuted),
+                      backgroundImage: _courier?.photoUrl != null && _courier!.photoUrl!.isNotEmpty
+                          ? NetworkImage(_courier!.photoUrl!)
+                          : null,
+                      child: _courier?.photoUrl == null || _courier!.photoUrl!.isEmpty
+                          ? const Icon(Icons.person, size: 60, color: textMuted)
+                          : null,
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(color: courierGreen, shape: BoxShape.circle),
-                      child: const Icon(Icons.check, color: Colors.white, size: 16),
-                    ),
+                    if (_courier?.isApproved == true)
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(color: courierGreen, shape: BoxShape.circle),
+                        child: const Icon(Icons.check, color: Colors.white, size: 16),
+                      ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  _user?['name'] ?? 'NAMA KURIR',
+                  _courier?.name ?? 'NAMA KURIR',
                   style: const TextStyle(color: textPrimary, fontSize: 22, fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _user?['email'] ?? 'email@domain.com',
+                  _courier?.email ?? 'email@domain.com',
                   style: const TextStyle(color: textSecondary, fontSize: 14),
                 ),
                 const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: brandRed.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: brandRed),
+                if (_courier?.isApproved == true)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: brandRed.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: brandRed),
+                    ),
+                    child: const Text(
+                      'VERIFIED COURIER',
+                      style: TextStyle(color: brandRed, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1),
+                    ),
                   ),
-                  child: const Text('VERIFIED COURIER', style: TextStyle(color: brandRed, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1)),
-                ),
               ],
             ),
           ),
-          
+
           const SizedBox(height: 32),
-          
-          // --- INFORMASI KURIR ---
-          const Text('INFORMASI AKUN', style: TextStyle(color: textSecondary, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1)),
+
+          // --- INFORMASI AKUN ---
+          const Text('INFORMASI AKUN',
+              style: TextStyle(color: textSecondary, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1)),
           const SizedBox(height: 12),
           _ProfileCard(
             children: [
-              _ProfileItem(icon: Icons.phone, label: 'Nomor Telepon', value: _user?['phone'] ?? '-'),
+              _ProfileItem(icon: Icons.phone, label: 'Nomor Telepon', value: _courier?.phone ?? '-'),
               const Divider(color: surfaceLight),
-              _ProfileItem(icon: Icons.location_city, label: 'Kota Operasional', value: 'Jakarta Selatan'),
+              _ProfileItem(icon: Icons.location_city, label: 'Kota Operasional', value: _courier?.city ?? '-'),
               const Divider(color: surfaceLight),
-              _ProfileItem(icon: Icons.motorcycle, label: 'Kendaraan', value: 'Honda Vario (B 1234 XYZ)'),
+              _ProfileItem(icon: Icons.location_on, label: 'Alamat', value: _courier?.address ?? '-'),
+              const Divider(color: surfaceLight),
+              _ProfileItem(icon: Icons.motorcycle, label: 'Kendaraan', value: _courier?.vehicleType ?? '-'),
+              const Divider(color: surfaceLight),
+              _ProfileItem(icon: Icons.pin, label: 'Plat Nomor', value: _courier?.plateNumber ?? '-'),
             ],
           ),
 
           const SizedBox(height: 24),
 
-          // --- MENU KEAMANAN & BANTUAN ---
-          const Text('PENGATURAN', style: TextStyle(color: textSecondary, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1)),
+          // --- MENU PENGATURAN ---
+          const Text('PENGATURAN',
+              style: TextStyle(color: textSecondary, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1)),
           const SizedBox(height: 12),
           _ProfileCard(
             children: [
               _MenuTile(
-                icon: Icons.security, 
-                title: 'Keamanan & Privasi', 
+                icon: Icons.security,
+                title: 'Keamanan & Privasi',
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SecurityPage())),
               ),
               const Divider(color: surfaceLight),
               _MenuTile(
-                icon: Icons.help_center, 
-                title: 'Pusat Bantuan', 
+                icon: Icons.help_center,
+                title: 'Pusat Bantuan',
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HelpCenterPage())),
               ),
               const Divider(color: surfaceLight),
-              _MenuTile(
-                icon: Icons.description, 
-                title: 'Syarat & Ketentuan', 
-                onTap: () {},
-              ),
+              _MenuTile(icon: Icons.description, title: 'Syarat & Ketentuan', onTap: () {}),
             ],
           ),
 
@@ -147,7 +224,8 @@ class _ProfilePageState extends State<ProfilePage> {
             child: OutlinedButton.icon(
               onPressed: _logout,
               icon: const Icon(Icons.logout, color: brandRed),
-              label: const Text('KELUAR AKUN', style: TextStyle(color: brandRed, fontWeight: FontWeight.w900, letterSpacing: 1)),
+              label: const Text('KELUAR AKUN',
+                  style: TextStyle(color: brandRed, fontWeight: FontWeight.w900, letterSpacing: 1)),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: brandRed),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
