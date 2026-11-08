@@ -123,10 +123,15 @@ class ApiService {
     await _post('${ApiConfig.kCourierRoutes}/$routePublicId/complete');
   }
 
-  Future<void> requestPayout({required String method, required String accountNumber}) async {
+  Future<void> requestPayout({
+    required String method,
+    required String accountNumber,
+    required double amount,
+  }) async {
     await _post(ApiConfig.kCourierPayouts, body: {
       'method': method,
       'account_number': accountNumber,
+        'amount': amount,
     });
   }
 
@@ -134,3 +139,6 @@ class ApiService {
     await _post('${ApiConfig.kCourierProfile}/status', body: {'is_online': isOnline});
   }
 }
+
+
+
