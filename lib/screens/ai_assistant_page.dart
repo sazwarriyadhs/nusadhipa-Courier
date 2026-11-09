@@ -13,7 +13,10 @@ class AiAssistantPage extends StatelessWidget {
         backgroundColor: bgDark,
       ),
       body: const Center(
-        child: Text('Halaman ini sedang dalam pengembangan', style: TextStyle(color: textMuted)),
+        child: Text(
+          'Halaman ini sedang dalam pengembangan',
+          style: TextStyle(color: textMuted),
+        ),
       ),
     );
   }

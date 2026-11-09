@@ -102,9 +102,16 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               const Icon(Icons.error_outline, color: brandRed, size: 64),
               const SizedBox(height: 16),
-              Text(_error!, textAlign: TextAlign.center, style: const TextStyle(color: textPrimary)),
+              Text(
+                _error!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: textPrimary),
+              ),
               const SizedBox(height: 16),
-              ElevatedButton(onPressed: _loadData, child: const Text('Coba Lagi')),
+              ElevatedButton(
+                onPressed: _loadData,
+                child: const Text('Coba Lagi'),
+              ),
             ],
           ),
         ),
@@ -128,25 +135,40 @@ class _ProfilePageState extends State<ProfilePage> {
                     CircleAvatar(
                       radius: 50,
                       backgroundColor: surfaceLight,
-                      backgroundImage: _courier?.photoUrl != null && _courier!.photoUrl!.isNotEmpty
+                      backgroundImage:
+                          _courier?.photoUrl != null &&
+                              _courier!.photoUrl!.isNotEmpty
                           ? NetworkImage(_courier!.photoUrl!)
                           : null,
-                      child: _courier?.photoUrl == null || _courier!.photoUrl!.isEmpty
+                      child:
+                          _courier?.photoUrl == null ||
+                              _courier!.photoUrl!.isEmpty
                           ? const Icon(Icons.person, size: 60, color: textMuted)
                           : null,
                     ),
                     if (_courier?.isApproved == true)
                       Container(
                         padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(color: courierGreen, shape: BoxShape.circle),
-                        child: const Icon(Icons.check, color: Colors.white, size: 16),
+                        decoration: const BoxDecoration(
+                          color: courierGreen,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                       ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 Text(
                   _courier?.name ?? 'NAMA KURIR',
-                  style: const TextStyle(color: textPrimary, fontSize: 22, fontWeight: FontWeight.w900),
+                  style: const TextStyle(
+                    color: textPrimary,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -156,7 +178,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 8),
                 if (_courier?.isApproved == true)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: brandRed.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(20),
@@ -164,7 +189,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: const Text(
                       'VERIFIED COURIER',
-                      style: TextStyle(color: brandRed, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1),
+                      style: TextStyle(
+                        color: brandRed,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
                     ),
                   ),
               ],
@@ -174,44 +204,88 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 32),
 
           // --- INFORMASI AKUN ---
-          const Text('INFORMASI AKUN',
-              style: TextStyle(color: textSecondary, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1)),
+          const Text(
+            'INFORMASI AKUN',
+            style: TextStyle(
+              color: textSecondary,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
+          ),
           const SizedBox(height: 12),
           _ProfileCard(
             children: [
-              _ProfileItem(icon: Icons.phone, label: 'Nomor Telepon', value: _courier?.phone ?? '-'),
+              _ProfileItem(
+                icon: Icons.phone,
+                label: 'Nomor Telepon',
+                value: _courier?.phone ?? '-',
+              ),
               const Divider(color: surfaceLight),
-              _ProfileItem(icon: Icons.location_city, label: 'Kota Operasional', value: _courier?.city ?? '-'),
+              _ProfileItem(
+                icon: Icons.location_city,
+                label: 'Kota Operasional',
+                value: _courier?.city ?? '-',
+              ),
               const Divider(color: surfaceLight),
-              _ProfileItem(icon: Icons.location_on, label: 'Alamat', value: _courier?.address ?? '-'),
+              _ProfileItem(
+                icon: Icons.location_on,
+                label: 'Alamat',
+                value: _courier?.address ?? '-',
+              ),
               const Divider(color: surfaceLight),
-              _ProfileItem(icon: Icons.motorcycle, label: 'Kendaraan', value: _courier?.vehicleType ?? '-'),
+              _ProfileItem(
+                icon: Icons.motorcycle,
+                label: 'Kendaraan',
+                value: _courier?.vehicleType ?? '-',
+              ),
               const Divider(color: surfaceLight),
-              _ProfileItem(icon: Icons.pin, label: 'Plat Nomor', value: _courier?.plateNumber ?? '-'),
+              _ProfileItem(
+                icon: Icons.pin,
+                label: 'Plat Nomor',
+                value: _courier?.plateNumber ?? '-',
+              ),
             ],
           ),
 
           const SizedBox(height: 24),
 
           // --- MENU PENGATURAN ---
-          const Text('PENGATURAN',
-              style: TextStyle(color: textSecondary, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1)),
+          const Text(
+            'PENGATURAN',
+            style: TextStyle(
+              color: textSecondary,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
+          ),
           const SizedBox(height: 12),
           _ProfileCard(
             children: [
               _MenuTile(
                 icon: Icons.security,
                 title: 'Keamanan & Privasi',
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SecurityPage())),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SecurityPage()),
+                ),
               ),
               const Divider(color: surfaceLight),
               _MenuTile(
                 icon: Icons.help_center,
                 title: 'Pusat Bantuan',
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HelpCenterPage())),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const HelpCenterPage()),
+                ),
               ),
               const Divider(color: surfaceLight),
-              _MenuTile(icon: Icons.description, title: 'Syarat & Ketentuan', onTap: () {}),
+              _MenuTile(
+                icon: Icons.description,
+                title: 'Syarat & Ketentuan',
+                onTap: () {},
+              ),
             ],
           ),
 
@@ -224,11 +298,19 @@ class _ProfilePageState extends State<ProfilePage> {
             child: OutlinedButton.icon(
               onPressed: _logout,
               icon: const Icon(Icons.logout, color: brandRed),
-              label: const Text('KELUAR AKUN',
-                  style: TextStyle(color: brandRed, fontWeight: FontWeight.w900, letterSpacing: 1)),
+              label: const Text(
+                'KELUAR AKUN',
+                style: TextStyle(
+                  color: brandRed,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1,
+                ),
+              ),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: brandRed),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ),
@@ -264,7 +346,11 @@ class _ProfileItem extends StatelessWidget {
   final String label;
   final String value;
 
-  const _ProfileItem({required this.icon, required this.label, required this.value});
+  const _ProfileItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -278,9 +364,23 @@ class _ProfileItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(color: textMuted, fontSize: 11, fontWeight: FontWeight.bold)),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: textMuted,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 2),
-                Text(value, style: const TextStyle(color: textPrimary, fontSize: 14, fontWeight: FontWeight.w600)),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    color: textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
           ),
@@ -295,7 +395,11 @@ class _MenuTile extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const _MenuTile({required this.icon, required this.title, required this.onTap});
+  const _MenuTile({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +411,16 @@ class _MenuTile extends StatelessWidget {
           children: [
             Icon(icon, color: textSecondary, size: 22),
             const SizedBox(width: 16),
-            Expanded(child: Text(title, style: const TextStyle(color: textPrimary, fontSize: 14, fontWeight: FontWeight.w600))),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
             const Icon(Icons.chevron_right, color: textMuted, size: 20),
           ],
         ),

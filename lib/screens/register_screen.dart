@@ -21,7 +21,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() { _loading = true; _error = null; });
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
 
     final res = await AuthService().register(
       name: _nameCtrl.text.trim(),
@@ -34,11 +37,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (res['success'] == true) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(res['message'] ?? 'Registrasi berhasil. Silakan login.')),
+        SnackBar(
+          content: Text(
+            res['message'] ?? 'Registrasi berhasil. Silakan login.',
+          ),
+        ),
       );
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
-      );
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
     } else {
       setState(() => _error = res['message'] ?? 'Registrasi gagal.');
     }
@@ -66,7 +73,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     prefixIcon: Icon(Icons.person_outline),
                     border: OutlineInputBorder(),
                   ),
-                  validator: (v) => (v == null || v.isEmpty) ? 'Nama wajib diisi' : null,
+                  validator: (v) =>
+                      (v == null || v.isEmpty) ? 'Nama wajib diisi' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -77,7 +85,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     prefixIcon: Icon(Icons.email_outlined),
                     border: OutlineInputBorder(),
                   ),
-                  validator: (v) => (v == null || !v.contains('@')) ? 'Email tidak valid' : null,
+                  validator: (v) => (v == null || !v.contains('@'))
+                      ? 'Email tidak valid'
+                      : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -88,7 +98,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     prefixIcon: Icon(Icons.phone_outlined),
                     border: OutlineInputBorder(),
                   ),
-                  validator: (v) => (v == null || v.isEmpty) ? 'Nomor HP wajib diisi' : null,
+                  validator: (v) =>
+                      (v == null || v.isEmpty) ? 'Nomor HP wajib diisi' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -99,7 +110,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     prefixIcon: Icon(Icons.lock_outline),
                     border: OutlineInputBorder(),
                   ),
-                  validator: (v) => (v == null || v.length < 10) ? 'Password minimal 10 karakter' : null,
+                  validator: (v) => (v == null || v.length < 10)
+                      ? 'Password minimal 10 karakter'
+                      : null,
                 ),
                 if (_error != null) ...[
                   const SizedBox(height: 12),
@@ -110,7 +123,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.red.shade200),
                     ),
-                    child: Text(_error!, style: TextStyle(color: Colors.red.shade800, fontSize: 13)),
+                    child: Text(
+                      _error!,
+                      style: TextStyle(
+                        color: Colors.red.shade800,
+                        fontSize: 13,
+                      ),
+                    ),
                   ),
                 ],
                 const SizedBox(height: 24),
@@ -119,7 +138,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: FilledButton(
                     onPressed: _loading ? null : _submit,
                     child: _loading
-                        ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
                         : const Text('Daftar'),
                   ),
                 ),

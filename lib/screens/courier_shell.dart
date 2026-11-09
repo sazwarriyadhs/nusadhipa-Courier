@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import 'dashboard_page.dart';
 import 'routes_page.dart';
-import 'earnings_page.dart'; 
+import 'earnings_page.dart';
 import 'profile_page.dart';
 
 class CourierShell extends StatefulWidget {
@@ -18,7 +18,7 @@ class _CourierShellState extends State<CourierShell> {
   final pages = const [
     DashboardPage(),
     RoutesPage(),
-    EarningsPage(), 
+    EarningsPage(),
     ProfilePage(),
   ];
 
@@ -95,11 +95,7 @@ class _NavItem extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Icon(
-            icon,
-            color: selected ? brandRed : textMuted,
-            size: 26,
-          ),
+          Icon(icon, color: selected ? brandRed : textMuted, size: 26),
           const SizedBox(height: 4),
           Text(
             label,

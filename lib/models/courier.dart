@@ -8,8 +8,8 @@ class Courier {
   final String partnershipType;
   final String? plateNumber;
   final String? city;
-  final String? address;      // BARU
-  final String? photoUrl;     // BARU
+  final String? address; // BARU
+  final String? photoUrl; // BARU
   final String? payoutMethod;
   final String? payoutAccount;
   final String status;

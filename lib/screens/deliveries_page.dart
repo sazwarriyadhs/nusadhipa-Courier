@@ -32,24 +32,41 @@ class _DeliveriesPageState extends State<DeliveriesPage> {
   }
 
   Future<void> _load() async {
-    setState(() { _loading = true; _error = null; });
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
-      final deliveries = await ApiService().getDeliveriesList();
-      setState(() { _deliveries = deliveries; _loading = false; });
+      final deliveries = await ApiService().getDeliveries();
+      setState(() {
+        _deliveries = deliveries;
+        _loading = false;
+      });
     } catch (e) {
-      setState(() { _error = e.toString(); _loading = false; });
+      setState(() {
+        _error = e.toString();
+        _loading = false;
+      });
     }
   }
 
   String _formatRupiah(dynamic value) {
     final num = double.tryParse(value?.toString() ?? '0') ?? 0;
-    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
     return formatter.format(num);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return const Center(child: CircularProgressIndicator(color: AppColors.primaryRed));
+    if (_loading) {
+      return const Center(
+        child: CircularProgressIndicator(color: AppColors.primaryRed),
+      );
+    }
     if (_error != null) {
       return Center(
         child: Padding(
@@ -57,15 +74,32 @@ class _DeliveriesPageState extends State<DeliveriesPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.cloud_off_outlined, color: AppColors.primaryRed, size: 52),
+              const Icon(
+                Icons.cloud_off_outlined,
+                color: AppColors.primaryRed,
+                size: 52,
+              ),
               const SizedBox(height: 12),
-              const Text('Gagal memuat pengiriman', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text(
+                'Gagal memuat pengiriman',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 8),
-              Text(_error!, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+              Text(
+                _error!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 12,
+                ),
+              ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _load,
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryRed, foregroundColor: Colors.white),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryRed,
+                  foregroundColor: Colors.white,
+                ),
                 child: const Text('Coba Lagi'),
               ),
             ],
@@ -84,17 +118,32 @@ class _DeliveriesPageState extends State<DeliveriesPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Pengiriman Saya', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.textDark)),
+              const Text(
+                'Pengiriman Saya',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.textDark,
+                ),
+              ),
               const SizedBox(height: 4),
-              const Text('Daftar order yang sedang kamu antar.', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
+              const Text(
+                'Daftar order yang sedang kamu antar.',
+                style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+              ),
               const SizedBox(height: 20),
               if (_deliveries.isEmpty)
                 const Padding(
                   padding: EdgeInsets.all(32),
-                  child: Center(child: Text('Belum ada pengiriman.', style: TextStyle(color: AppColors.textMuted))),
+                  child: Center(
+                    child: Text(
+                      'Belum ada pengiriman.',
+                      style: TextStyle(color: AppColors.textMuted),
+                    ),
+                  ),
                 )
               else
-                ..._deliveries.map((d) => _buildDeliveryCard(d)).toList(),
+                ..._deliveries.map((d) => _buildDeliveryCard(d)),
             ],
           ),
         ),
@@ -108,8 +157,12 @@ class _DeliveriesPageState extends State<DeliveriesPage> {
     final isTaken = claimStatus == 'taken';
     final isCompleted = claimStatus == 'completed';
 
-    final statusLabel = isCompleted ? 'Selesai' : (isTaken ? 'Sedang Diantar' : status);
-    final statusColor = isCompleted ? AppColors.successGreen : (isTaken ? AppColors.orange : AppColors.primaryRed);
+    final statusLabel = isCompleted
+        ? 'Selesai'
+        : (isTaken ? 'Sedang Diantar' : status);
+    final statusColor = isCompleted
+        ? AppColors.successGreen
+        : (isTaken ? AppColors.orange : AppColors.primaryRed);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -118,7 +171,9 @@ class _DeliveriesPageState extends State<DeliveriesPage> {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.border),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8)],
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,16 +182,36 @@ class _DeliveriesPageState extends State<DeliveriesPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(d['order_number']?.toString() ?? 'ORD-XXX', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+              Text(
+                d['order_number']?.toString() ?? 'ORD-XXX',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                ),
+              ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(color: statusColor.withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
-                child: Text(statusLabel, style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: statusColor)),
+                decoration: BoxDecoration(
+                  color: statusColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  statusLabel,
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: statusColor,
+                  ),
+                ),
               ),
             ],
           ),
           const SizedBox(height: 4),
-          Text(d['buyer_name']?.toString() ?? 'Pembeli', style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+          Text(
+            d['buyer_name']?.toString() ?? 'Pembeli',
+            style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+          ),
           const SizedBox(height: 12),
           const Divider(height: 1),
           const SizedBox(height: 12),
@@ -145,10 +220,22 @@ class _DeliveriesPageState extends State<DeliveriesPage> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.location_on, size: 16, color: AppColors.primaryRed),
+              const Icon(
+                Icons.location_on,
+                size: 16,
+                color: AppColors.primaryRed,
+              ),
               const SizedBox(width: 6),
               Expanded(
-                child: Text(d['shipping_address']?.toString() ?? '-', style: const TextStyle(fontSize: 11, color: AppColors.textDark), maxLines: 2, overflow: TextOverflow.ellipsis),
+                child: Text(
+                  d['shipping_address']?.toString() ?? '-',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: AppColors.textDark,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -159,9 +246,22 @@ class _DeliveriesPageState extends State<DeliveriesPage> {
             children: [
               const Icon(Icons.near_me, size: 14, color: AppColors.textMuted),
               const SizedBox(width: 4),
-              Text('${d['shipping_distance_km'] ?? '-'} km', style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+              Text(
+                '${d['shipping_distance_km'] ?? '-'} km',
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: AppColors.textMuted,
+                ),
+              ),
               const Spacer(),
-              Text(_formatRupiah(d['grand_total'] ?? 0), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: AppColors.primaryRed)),
+              Text(
+                _formatRupiah(d['grand_total'] ?? 0),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.primaryRed,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -192,9 +292,14 @@ class _DeliveriesPageState extends State<DeliveriesPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.successGreen,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-                child: const Text('SELESAIKAN PENGANTARAN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                child: const Text(
+                  'SELESAIKAN PENGANTARAN',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                ),
               ),
             ),
         ],

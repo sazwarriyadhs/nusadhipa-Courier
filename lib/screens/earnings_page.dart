@@ -55,10 +55,7 @@ class _EarningsPageState extends State<EarningsPage> {
   }
 
   String _formatRp(double amount) {
-    return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (m) => '${m[1]}.',
-    )}';
+    return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')}';
   }
 
   void _showPayoutSheet() {
@@ -121,9 +118,16 @@ class _EarningsPageState extends State<EarningsPage> {
             children: [
               const Icon(Icons.error_outline, color: brandRed, size: 64),
               const SizedBox(height: 16),
-              Text(_error!, textAlign: TextAlign.center, style: const TextStyle(color: textPrimary)),
+              Text(
+                _error!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: textPrimary),
+              ),
               const SizedBox(height: 16),
-              ElevatedButton(onPressed: _loadData, child: const Text('Coba Lagi')),
+              ElevatedButton(
+                onPressed: _loadData,
+                child: const Text('Coba Lagi'),
+              ),
             ],
           ),
         ),
@@ -164,18 +168,29 @@ class _EarningsPageState extends State<EarningsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: brandRed.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Text(
                   'SALDO TERSEDIA',
-                  style: TextStyle(color: brandRed, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                  style: TextStyle(
+                    color: brandRed,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
               IconButton(
-                icon: Icon(_showBalance ? Icons.visibility : Icons.visibility_off, color: textMuted),
+                icon: Icon(
+                  _showBalance ? Icons.visibility : Icons.visibility_off,
+                  color: textMuted,
+                ),
                 onPressed: () => setState(() => _showBalance = !_showBalance),
               ),
             ],
@@ -183,7 +198,12 @@ class _EarningsPageState extends State<EarningsPage> {
           const SizedBox(height: 8),
           Text(
             _showBalance ? _formatRp(_earnings?.balance ?? 0) : 'Rp ******',
-            style: const TextStyle(color: textPrimary, fontSize: 36, fontWeight: FontWeight.w900, letterSpacing: -1),
+            style: const TextStyle(
+              color: textPrimary,
+              fontSize: 36,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -1,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
@@ -196,7 +216,10 @@ class _EarningsPageState extends State<EarningsPage> {
             height: 52,
             child: ElevatedButton.icon(
               onPressed: _showPayoutSheet,
-              icon: const Icon(Icons.account_balance_wallet, color: Colors.white),
+              icon: const Icon(
+                Icons.account_balance_wallet,
+                color: Colors.white,
+              ),
               label: const Text(
                 'AJUKAN PENCAIRAN',
                 style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1),
@@ -204,7 +227,9 @@ class _EarningsPageState extends State<EarningsPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: brandRed,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ),
@@ -227,14 +252,22 @@ class _EarningsPageState extends State<EarningsPage> {
         children: [
           const Text(
             'TRANSAKSI TERBARU',
-            style: TextStyle(color: textPrimary, fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: 0.5),
+            style: TextStyle(
+              color: textPrimary,
+              fontSize: 14,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.5,
+            ),
           ),
           const SizedBox(height: 16),
           if (history.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 24),
               child: Center(
-                child: Text('Belum ada transaksi', style: TextStyle(color: textMuted, fontSize: 13)),
+                child: Text(
+                  'Belum ada transaksi',
+                  style: TextStyle(color: textMuted, fontSize: 13),
+                ),
               ),
             )
           else
@@ -246,8 +279,22 @@ class _EarningsPageState extends State<EarningsPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(h.orderNumber, style: const TextStyle(color: textPrimary, fontSize: 14, fontWeight: FontWeight.w600)),
-                        Text('+ ${_formatRp(h.amount)}', style: const TextStyle(color: courierGreen, fontSize: 14, fontWeight: FontWeight.bold)),
+                        Text(
+                          h.orderNumber,
+                          style: const TextStyle(
+                            color: textPrimary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          '+ ${_formatRp(h.amount)}',
+                          style: const TextStyle(
+                            color: courierGreen,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -268,7 +315,11 @@ class PayoutSheet extends StatefulWidget {
   final double balance;
   final VoidCallback onSuccess;
 
-  const PayoutSheet({super.key, required this.balance, required this.onSuccess});
+  const PayoutSheet({
+    super.key,
+    required this.balance,
+    required this.onSuccess,
+  });
 
   @override
   State<PayoutSheet> createState() => _PayoutSheetState();
@@ -283,7 +334,11 @@ class _PayoutSheetState extends State<PayoutSheet> {
   String? _error;
 
   static const _methods = [
-    {'id': 'bank_transfer', 'label': 'Bank Transfer', 'icon': Icons.account_balance},
+    {
+      'id': 'bank_transfer',
+      'label': 'Bank Transfer',
+      'icon': Icons.account_balance,
+    },
     {'id': 'ewallet', 'label': 'E-Wallet', 'icon': Icons.wallet},
   ];
 
@@ -295,10 +350,7 @@ class _PayoutSheetState extends State<PayoutSheet> {
   }
 
   String _formatRp(double amount) {
-    return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (m) => '${m[1]}.',
-    )}';
+    return 'Rp ${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')}';
   }
 
   Future<void> _submit() async {
@@ -372,7 +424,8 @@ class _PayoutSheetState extends State<PayoutSheet> {
             // Handle bar
             Center(
               child: Container(
-                width: 40, height: 4,
+                width: 40,
+                height: 4,
                 decoration: BoxDecoration(
                   color: textMuted,
                   borderRadius: BorderRadius.circular(2),
@@ -384,12 +437,20 @@ class _PayoutSheetState extends State<PayoutSheet> {
             // Header
             Row(
               children: [
-                const Icon(Icons.account_balance_wallet, color: brandRed, size: 28),
+                const Icon(
+                  Icons.account_balance_wallet,
+                  color: brandRed,
+                  size: 28,
+                ),
                 const SizedBox(width: 12),
                 const Expanded(
                   child: Text(
                     'Ajukan Pencairan',
-                    style: TextStyle(color: textPrimary, fontSize: 20, fontWeight: FontWeight.w900),
+                    style: TextStyle(
+                      color: textPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
                 IconButton(
@@ -406,29 +467,48 @@ class _PayoutSheetState extends State<PayoutSheet> {
             const SizedBox(height: 24),
 
             // Metode
-            const Text('Metode Pencairan', style: TextStyle(color: textSecondary, fontSize: 12, fontWeight: FontWeight.bold)),
+            const Text(
+              'Metode Pencairan',
+              style: TextStyle(
+                color: textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             Row(
               children: _methods.map((m) {
                 final selected = _selectedMethod == m['id'];
                 return Expanded(
                   child: GestureDetector(
-                    onTap: () => setState(() => _selectedMethod = m['id'] as String),
+                    onTap: () =>
+                        setState(() => _selectedMethod = m['id'] as String),
                     child: Container(
                       margin: const EdgeInsets.only(right: 8),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
-                        color: selected ? brandRed.withValues(alpha: 0.2) : surfaceLight,
+                        color: selected
+                            ? brandRed.withValues(alpha: 0.2)
+                            : surfaceLight,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: selected ? brandRed : surfaceLight),
+                        border: Border.all(
+                          color: selected ? brandRed : surfaceLight,
+                        ),
                       ),
                       child: Column(
                         children: [
-                          Icon(m['icon'] as IconData, color: selected ? brandRed : textMuted),
+                          Icon(
+                            m['icon'] as IconData,
+                            color: selected ? brandRed : textMuted,
+                          ),
                           const SizedBox(height: 4),
                           Text(
                             m['label'] as String,
-                            style: TextStyle(color: selected ? brandRed : textMuted, fontSize: 11, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              color: selected ? brandRed : textMuted,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -440,29 +520,51 @@ class _PayoutSheetState extends State<PayoutSheet> {
             const SizedBox(height: 20),
 
             // Rekening
-            const Text('Nomor Rekening / E-Wallet', style: TextStyle(color: textSecondary, fontSize: 12, fontWeight: FontWeight.bold)),
+            const Text(
+              'Nomor Rekening / E-Wallet',
+              style: TextStyle(
+                color: textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             TextField(
               controller: _accountController,
               style: const TextStyle(color: textPrimary),
               decoration: InputDecoration(
-                hintText: _selectedMethod == 'bank' ? 'Contoh: BCA 1234567890' : 'Contoh: 081234567890',
+                hintText: _selectedMethod == 'bank'
+                    ? 'Contoh: BCA 1234567890'
+                    : 'Contoh: 081234567890',
                 hintStyle: const TextStyle(color: textMuted),
                 prefixIcon: const Icon(Icons.pin, color: textMuted),
                 filled: true,
                 fillColor: surfaceLight,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
             const SizedBox(height: 20),
 
             // Nominal
-            const Text('Nominal Pencairan', style: TextStyle(color: textSecondary, fontSize: 12, fontWeight: FontWeight.bold)),
+            const Text(
+              'Nominal Pencairan',
+              style: TextStyle(
+                color: textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             TextField(
               controller: _amountController,
               keyboardType: TextInputType.number,
-              style: const TextStyle(color: textPrimary, fontWeight: FontWeight.w900),
+              style: const TextStyle(
+                color: textPrimary,
+                fontWeight: FontWeight.w900,
+              ),
               onChanged: (_) => setState(() {}),
               decoration: InputDecoration(
                 hintText: 'Min. Rp 10.000',
@@ -470,7 +572,10 @@ class _PayoutSheetState extends State<PayoutSheet> {
                 prefixIcon: const Icon(Icons.money, color: textMuted),
                 filled: true,
                 fillColor: surfaceLight,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
 
@@ -513,7 +618,15 @@ class _PayoutSheetState extends State<PayoutSheet> {
                   children: [
                     const Icon(Icons.error, color: brandRed, size: 20),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(_error!, style: const TextStyle(color: textPrimary, fontSize: 12))),
+                    Expanded(
+                      child: Text(
+                        _error!,
+                        style: const TextStyle(
+                          color: textPrimary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -529,14 +642,26 @@ class _PayoutSheetState extends State<PayoutSheet> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: brandRed,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 child: _isLoading
                     ? const SizedBox(
-                        width: 24, height: 24,
-                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
                       )
-                    : const Text('AJUKAN SEKARANG', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1)),
+                    : const Text(
+                        'AJUKAN SEKARANG',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1,
+                        ),
+                      ),
               ),
             ),
           ],
@@ -545,7 +670,12 @@ class _PayoutSheetState extends State<PayoutSheet> {
     );
   }
 
-  Widget _previewRow(String label, String value, {bool isBold = false, Color? color}) {
+  Widget _previewRow(
+    String label,
+    String value, {
+    bool isBold = false,
+    Color? color,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -562,5 +692,3 @@ class _PayoutSheetState extends State<PayoutSheet> {
     );
   }
 }
-
-

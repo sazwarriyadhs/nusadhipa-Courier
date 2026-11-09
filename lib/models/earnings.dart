@@ -1,7 +1,7 @@
 class Earnings {
-  final double balance;  // Saldo tersedia
-  final double pending;  // Pendapatan tertunda
-  final double total;    // Total pendapatan keseluruhan
+  final double balance; // Saldo tersedia
+  final double pending; // Pendapatan tertunda
+  final double total; // Total pendapatan keseluruhan
   final List<EarningHistory> history;
 
   Earnings({
@@ -16,7 +16,8 @@ class Earnings {
       balance: double.tryParse(json['balance']?.toString() ?? '0') ?? 0,
       pending: double.tryParse(json['pending']?.toString() ?? '0') ?? 0,
       total: double.tryParse(json['total']?.toString() ?? '0') ?? 0,
-      history: (json['history'] as List<dynamic>?)
+      history:
+          (json['history'] as List<dynamic>?)
               ?.map((e) => EarningHistory.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],

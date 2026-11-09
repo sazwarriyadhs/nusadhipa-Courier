@@ -31,11 +31,16 @@ class AuthService {
   Future<Map<String, dynamic>> login(String email, String password) async {
     final uri = Uri.parse('${ApiConfig.kApiBaseUrl}${ApiConfig.kCourierLogin}');
     try {
-      final response = await http.post(
-        uri,
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        body: jsonEncode({'email': email, 'password': password}),
-      ).timeout(Duration(milliseconds: ApiConfig.kTimeoutMs));
+      final response = await http
+          .post(
+            uri,
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode({'email': email, 'password': password}),
+          )
+          .timeout(Duration(milliseconds: ApiConfig.kTimeoutMs));
 
       if (response.body.isEmpty) {
         return {'success': false, 'message': 'Respons kosong dari server.'};
@@ -47,14 +52,20 @@ class AuthService {
       }
 
       if (response.statusCode != 200 || decoded['success'] != true) {
-        return {'success': false, 'message': decoded['message'] ?? 'Login gagal.'};
+        return {
+          'success': false,
+          'message': decoded['message'] ?? 'Login gagal.',
+        };
       }
 
       final token = decoded['token'] as String?;
       final user = decoded['data'] as Map<String, dynamic>?;
 
       if (token == null || token.isEmpty) {
-        return {'success': false, 'message': 'Token tidak ditemukan di respons.'};
+        return {
+          'success': false,
+          'message': 'Token tidak ditemukan di respons.',
+        };
       }
 
       final prefs = await SharedPreferences.getInstance();
@@ -73,24 +84,37 @@ class AuthService {
     required String phone,
     required String password,
   }) async {
-    final uri = Uri.parse('${ApiConfig.kApiBaseUrl}${ApiConfig.kCourierRegister}');
+    final uri = Uri.parse(
+      '${ApiConfig.kApiBaseUrl}${ApiConfig.kCourierRegister}',
+    );
     try {
-      final response = await http.post(
-        uri,
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        body: jsonEncode({
-          'name': name,
-          'email': email,
-          'phone': phone,
-          'password': password,
-        }),
-      ).timeout(Duration(milliseconds: ApiConfig.kTimeoutMs));
+      final response = await http
+          .post(
+            uri,
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode({
+              'name': name,
+              'email': email,
+              'phone': phone,
+              'password': password,
+            }),
+          )
+          .timeout(Duration(milliseconds: ApiConfig.kTimeoutMs));
 
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode != 200 && response.statusCode != 201) {
-        return {'success': false, 'message': data['message'] ?? 'Register gagal.'};
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Register gagal.',
+        };
       }
-      return {'success': true, 'message': data['message'] ?? 'Registrasi berhasil.'};
+      return {
+        'success': true,
+        'message': data['message'] ?? 'Registrasi berhasil.',
+      };
     } catch (e) {
       return {'success': false, 'message': 'Koneksi gagal: $e'};
     }

@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            
+
             // Form Container
             Padding(
               padding: const EdgeInsets.all(24.0),
@@ -95,7 +95,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: InputDecoration(
                       labelText: 'Email',
                       labelStyle: const TextStyle(color: textMuted),
-                      prefixIcon: const Icon(Icons.email_rounded, color: textMuted),
+                      prefixIcon: const Icon(
+                        Icons.email_rounded,
+                        color: textMuted,
+                      ),
                       filled: true,
                       fillColor: surfaceDark,
                       border: OutlineInputBorder(
@@ -114,13 +117,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: InputDecoration(
                       labelText: 'Password',
                       labelStyle: const TextStyle(color: textMuted),
-                      prefixIcon: const Icon(Icons.lock_rounded, color: textMuted),
+                      prefixIcon: const Icon(
+                        Icons.lock_rounded,
+                        color: textMuted,
+                      ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                           color: textMuted,
                         ),
-                        onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                        onPressed: () => setState(
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
                       ),
                       filled: true,
                       fillColor: surfaceDark,
@@ -164,12 +174,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                          MaterialPageRoute(
+                            builder: (_) => const RegisterScreen(),
+                          ),
                         );
                       },
                       child: const Text(
                         'Belum punya akun? Daftar di sini',
-                        style: TextStyle(color: brandRed, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          color: brandRed,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),

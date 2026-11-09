@@ -42,8 +42,14 @@ class ApiService {
     }
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      final message = body is Map ? (body['message'] ?? 'Terjadi kesalahan server') : 'Terjadi kesalahan';
-      throw ApiException(statusCode: response.statusCode, message: message.toString(), data: body);
+      final message = body is Map
+          ? (body['message'] ?? 'Terjadi kesalahan server')
+          : 'Terjadi kesalahan';
+      throw ApiException(
+        statusCode: response.statusCode,
+        message: message.toString(),
+        data: body,
+      );
     }
 
     if (body is Map && body['success'] == false) {
@@ -60,7 +66,8 @@ class ApiService {
   Future<dynamic> _get(String path) async {
     final uri = Uri.parse('${ApiConfig.kApiBaseUrl}$path');
     try {
-      final response = await _client.get(uri, headers: await _headers())
+      final response = await _client
+          .get(uri, headers: await _headers())
           .timeout(Duration(milliseconds: ApiConfig.kTimeoutMs));
       return _handleResponse(response);
     } on ApiException {
@@ -73,11 +80,13 @@ class ApiService {
   Future<dynamic> _post(String path, {Map<String, dynamic>? body}) async {
     final uri = Uri.parse('${ApiConfig.kApiBaseUrl}$path');
     try {
-      final response = await _client.post(
-        uri,
-        headers: await _headers(),
-        body: body != null ? jsonEncode(body) : null,
-      ).timeout(Duration(milliseconds: ApiConfig.kTimeoutMs));
+      final response = await _client
+          .post(
+            uri,
+            headers: await _headers(),
+            body: body != null ? jsonEncode(body) : null,
+          )
+          .timeout(Duration(milliseconds: ApiConfig.kTimeoutMs));
       return _handleResponse(response);
     } on ApiException {
       rethrow;
@@ -103,7 +112,9 @@ class ApiService {
     final json = await _get(ApiConfig.kCourierDeliveries);
     final data = json['data'];
     if (data is List) {
-      return data.map((e) => Delivery.fromJson(e as Map<String, dynamic>)).toList();
+      return data
+          .map((e) => Delivery.fromJson(e as Map<String, dynamic>))
+          .toList();
     }
     return [];
   }
@@ -128,17 +139,20 @@ class ApiService {
     required String accountNumber,
     required double amount,
   }) async {
-    await _post(ApiConfig.kCourierPayouts, body: {
-      'method': method,
-      'account_number': accountNumber,
+    await _post(
+      ApiConfig.kCourierPayouts,
+      body: {
+        'method': method,
+        'account_number': accountNumber,
         'amount': amount,
-    });
+      },
+    );
   }
 
   Future<void> updateOnlineStatus(bool isOnline) async {
-    await _post('${ApiConfig.kCourierProfile}/status', body: {'is_online': isOnline});
+    await _post(
+      '${ApiConfig.kCourierProfile}/status',
+      body: {'is_online': isOnline},
+    );
   }
 }
-
-
-

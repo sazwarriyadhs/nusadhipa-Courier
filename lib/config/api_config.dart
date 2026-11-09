@@ -35,8 +35,9 @@ class ApiConfig {
 
   static void printCurrentConfig() {
     if (!kDebugMode) return;
-    debugPrint('🔧 Courier ApiConfig: ${kUseProductionApi ? "PRODUCTION" : "LOCAL"}');
+    debugPrint(
+      '🔧 Courier ApiConfig: ${kUseProductionApi ? "PRODUCTION" : "LOCAL"}',
+    );
     debugPrint('🔧 Base URL: $kApiBaseUrl');
   }
 }
-

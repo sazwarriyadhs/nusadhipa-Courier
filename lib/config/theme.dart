@@ -8,7 +8,7 @@ const bgDark = Color(0xFF121212);
 const surfaceDark = Color(0xFF1E1E1E);
 const surfaceLight = Color(0xFF2C2C2C);
 
-const brandRed = Color(0xFFE5232E); 
+const brandRed = Color(0xFFE5232E);
 const courierGreen = Color(0xFF34C759);
 const courierBlue = Color(0xFF007AFF);
 const warningOrange = Color(0xFFF59E0B);
@@ -40,7 +40,6 @@ ThemeData buildCourierTheme() {
       primary: brandRed,
       secondary: warningOrange,
       surface: surfaceDark,
-      background: bgDark,
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: bgDark,
@@ -60,7 +59,10 @@ ThemeData buildCourierTheme() {
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        textStyle: const TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5),
+        textStyle: const TextStyle(
+          fontWeight: FontWeight.w900,
+          letterSpacing: 0.5,
+        ),
       ),
     ),
     textTheme: const TextTheme(

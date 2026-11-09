@@ -11,7 +11,7 @@ class Delivery {
   final String claimStatus; // 'pending', 'completed'
   final String status;
   final String buyerName;
-  
+
   // Parsed dari shipping_address (JSON string)
   final String? receiverName;
   final String? receiverPhone;
@@ -59,7 +59,8 @@ class Delivery {
       publicId: json['public_id'] ?? '',
       orderNumber: json['order_number'] ?? '',
       grandTotal: double.tryParse(json['grand_total']?.toString() ?? '0') ?? 0,
-      shippingDistanceKm: double.tryParse(json['shipping_distance_km']?.toString() ?? '0') ?? 0,
+      shippingDistanceKm:
+          double.tryParse(json['shipping_distance_km']?.toString() ?? '0') ?? 0,
       shippingLat: double.tryParse(json['shipping_lat']?.toString() ?? ''),
       shippingLng: double.tryParse(json['shipping_lng']?.toString() ?? ''),
       claimStatus: json['claim_status'] ?? 'pending',
